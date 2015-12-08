@@ -1,0 +1,115 @@
+##
+# TurnServer configuration file.
+#
+
+## Public IPv4 address of any relayed address (if not set, no relay for IPv4).
+## To have multiple address, separate addresses with a comma
+## (i.e. listen_address = { "172.16.0.1", "172.17.0.1" }).
+listen_address = { "192.168.0.1" }
+
+## Public IPv6 address of any relayed address (if not set, no relay for IPv6).
+## To have multiple address, separate address with a comma
+## (i.e. listen_addressv6 = { "2001:db8:1::1", "2001:db8:2::1" }).
+#listen_addressv6 = { "2001:db8::1" }
+
+## UDP listening port.
+udp_port = 3478
+
+## TCP listening port.
+tcp_port = 3478
+
+## TLS listening port.
+tls_port = 5349
+
+## TLS support.
+tls = false
+
+## DTLS support. It is an experimental feature and is not defined in TURN
+## standard.
+dtls = false
+
+## Maximum allocation port number.
+max_port = 65535
+
+## Minimum allocation port number.
+min_port = 49152
+
+## TURN-TCP support.
+turn_tcp = false
+
+## TURN-TCP buffering mode:
+## - true, use userspace buffering;
+## - false, use kernel buffering.
+tcp_buffer_userspace = true
+
+## TURN-TCP maximum buffer size.
+tcp_buffer_size = 32768
+
+## Daemon mode.
+daemon = false
+
+## Unprivileged user.
+## If you want to use this feature create a system user.
+## On Linux: adduser --system --group turnserver
+#unpriv_user = turnserver
+
+## Realm value.
+realm = "domain.org"
+
+## Nonce key.
+nonce_key = "hieKedq"
+
+## Max relay per username.
+max_relay_per_username = 5
+
+## Allocation lifetime.
+allocation_lifetime = 1800
+
+## Allocation bandwidth limitation (in KBytes/s).
+## 0 value means bandwidth quota disabled.
+bandwidth_per_allocation = 150
+
+## Restricted user bandwidth (in KBytes/s).
+## 0 value means bandwidth limitation disabled.
+restricted_bandwidth = 10
+
+## Denied addresses.
+
+# disallow relaying to localhost
+denied_address {
+  address = "127.0.0.1"
+  mask = "8"
+  port = 0
+}
+
+# disallow relaying to ip6-localhost
+denied_address {
+  address = "::1"
+  mask = "128"
+  port = 0
+}
+
+#denied_address {
+#  address = "10.1.4.0"
+#  mask = 24
+#  port = 0
+#}
+
+## Certification Authority file.
+ca_file = "./ca.crt"
+
+## Server certificate file.
+cert_file = "./server.crt"
+
+## Private key file.
+private_key_file = "./server.key"
+
+## Account method.
+account_method = "file"
+
+## Account file (if account_method = file).
+account_file = "/usr/local/etc/turnusers.txt"
+
+## mod_tmpuser.
+mod_tmpuser = false
+

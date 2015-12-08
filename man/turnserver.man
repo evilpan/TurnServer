@@ -1,0 +1,64 @@
+.TH turnserver 1 "May 16, 2011" "TurnServer"
+
+.SH NAME
+turnserver \- TURN server implementation
+
+.SH SYNOPSIS
+.B turnserver
+.RI [options]
+
+.SH DESCRIPTION
+TurnServer is an implementation of RFC5766 "Traversal Using Relays around
+NAT (TURN)". The TURN protocol allows a client to obtain IP addresses and ports
+from such a relay. It is most useful for elements behind symmetric NATs or
+firewalls that wish to be on the receiving end of a connection to a single peer.
+
+TURN clients can connect to TurnServer with the following protocols: UDP, TCP
+and TLS over TCP. Experimental DTLS support is also provided. Relaying data can
+be done with UDP or TCP protocol.
+
+TurnServer supports also RFC5389 (STUN Binding request), RFC6062 (relay data
+with TCP protocol) and RFC6156 (relay IPv6-IPv6, IPv4-IPv6 and IPv6-IPv4).
+
+.br
+.br
+
+.SH OPTIONS
+TurnServer accepts following options:
+.TP
+.B -c <configuration_file>
+Read configuration from configuration_file. If not specified, default path
+(/etc/turnserver.conf) is used.
+
+.TP
+.B -h
+Show summary of options.
+
+.TP
+.B -v
+Show version information and exit.
+
+.SH FILES
+.I /usr/local/etc/turnserver.conf
+.RS
+TurnServer configuration see
+.BR turnserver.conf (5)
+for more details.
+.RE
+
+.SH AUTHOR
+Sebastien Vincent <sebastien.vincent@turnserver.org>
+
+.SH "SEE ALSO"
+.BR turnserver.conf (5)
+.PP
+RFC5766: Traversal Using Relays around NAT (TURN): Relay Extensions to Session
+Traversal Utilities for NAT (STUN)
+.PP
+RFC5389: Session Traversal Utilities for NAT (STUN)
+.PP
+RFC6062: Traversal Using Relays around NAT (TURN) Extensions for TCP Allocations
+.PP
+RFC6156: Traversal Using Relays around NAT (TURN) Extension for IPv6
+.PP
+

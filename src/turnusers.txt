@@ -1,0 +1,1 @@
+pnz:123456:domain.org:authorized

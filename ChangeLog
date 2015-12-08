@@ -1,0 +1,114 @@
+2013-06-14	Sebastien Vincent <sebastien.vincent@turnserver.org>
+
+	* Version 0.7.3		 - Minor fix to be able to compile with recent glibc.
+
+2012-11-19	Daniel Pocock <daniel@pocock.com.au>
+
+  * Version 0.7.2		 - Further tweaks to autotools
+
+2012-10-17	Sebastien Vincent <sebastien.vincent@turnserver.org>
+
+	* Version 0.7.1		 - Minor modifications to ease Debian package integration.
+
+2012-10-01  Sebastien Vincent <sebastien.vincent@turnserver.org>
+
+  * Version 0.7      - Fixes compilation warnings with clang;
+                     - Send indications do not need to have realm, user, ...;
+                     - Fixes typos.
+
+2012-02-22  Sebastien Vincent <sebastien.vincent@turnserver.org>
+
+  * Version 0.6      - Add spec file to build an RPM package (by Ken Cox);
+                     - Better syslog logging separated by level (by Ken Cox):
+                     - Bug fixes provided by Ryo Sato and Ken Cox;
+                     - Fixes TURN-TCP bugs reported by Nigel Pattinson.
+
+2011-06-10  Sebastien Vincent <sebastien.vincent@turnserver.org>
+
+  * Version 0.5      - Add restricted users feature;
+                     - Add RFC6062 (TURN-TCP) document;
+                     - Add RFC6156 (TURN-IPV6) document;
+                     - Add mod_tmpuser to create/delete temporary users;
+                     - Fix endianess.
+
+2010-05-02  Sebastien Vincent <sebastien.vincent@turnserver.org>
+
+  * Version 0.4     - Add RFC5766 (TURN) document;
+                    - Add turn-ipv6-09 and turn-tcp-06 drafts support;
+                    - Add multiprotocol client example (UDP/TCP/TLS/DTLS);
+                    - Add allocation port number range configuration;
+                    - Some files can compiled with MS Windows as well as
+                      multiprotocol client example.
+
+2010-01-03  Sebastien Vincent <sebastien.vincent@turnserver.org>
+
+  * Version 0.3     - Add turn-ipv6-08 draft support;
+                    - Add credentials reload support;
+                    - Fix a "stack smashing";
+                    - Experimental DTLS support (not in TURN standard).
+
+2009-08-26  Sebastien Vincent <sebastien.vincent@turnserver.org>
+
+  * Version 0.2.3   - Add turn-ipv6-06 draft support;
+                    - Add turn-16 draft support;
+                    - Fix lifetime bug.
+
+2009-03-09  Sebastien Vincent <vincent@lsiit.u-strasbg.fr>
+
+  * Version 0.2.2   - Load sharing with multiple uplink addresses;
+                    - Increase nonce lifetime to one hour;
+                    - Fix ChannelBind refresh;
+                    - Add turn-13 draft;
+                    - Add 403 error message.
+
+2008-12-17  Sebastien Vincent <vincent@lsiit.u-strasbg.fr>
+
+  * Version 0.2.1   - Fix CRC32 generation;
+                    - Drop privileges if run as root/setuid root.
+
+2008-12-15  Sebastien Vincent <vincent@lsiit.u-strasbg.fr>
+
+  * Version 0.2     - Add attributes from turn-12 draft;
+                    - Add authentication on all TURN responses when possible;
+                    - Pre-calculate account MD5 hash;
+                    - Re-organize some code (message-integrity calculation, ...);
+                    - Alternate behavior for DF flag;
+                    - Separate TCP and TLS sockets;
+                    - Correctly relayed data from peer to client in TLS;
+                    - Multiple XOR-PEER-ADDRESS support in CreatePermission;
+                    - Update wireshark parser (packet-stun2.c);
+                    - Additionnal configuration parameters;
+                    - Allocation number and bandwidth quota;
+                    - Address/port restrictions;
+                    - Reconstruct fragmented TCP messages support;
+                    - Prevent allocation hijacking support;
+                    - Add logs support via syslog.
+
+2008-11-22  Sebastien Vincent <vincent@lsiit.u-strasbg.fr>
+
+  * Version 0.1.3   - Backport code refactoring from 0.2-draft-11 branch;
+                    - Additionnal configuration parameters.
+
+2008-10-21  Sebastien Vincent <vincent@lsiit.u-strasbg.fr>
+
+  * Version 0.1.2.2 - Fix nonce validation for 64-bit platform.
+
+2008-09-24  Sebastien Vincent <vincent@lsiit.u-strasbg.fr>
+
+  * Version 0.1.2.1 - Fix bug in go_daemon().
+
+2008-09-02  Sebastien Vincent <vincent@lsiit.u-strasbg.fr>
+
+  * Version 0.1.2   - Fix bug (infinite loop) when receiving unknown 
+                      comprehension-required attribute.
+
+2008-08-16  Sebastien Vincent <vincent@lsiit.u-strasbg.fr>
+
+  * Version 0.1.1   - Fix IPv6 problem;
+                    - Add missing XOR for FINGERPRINT mechanism;
+                    - Fix minors bugs.
+
+2008-07-26  Sebastien Vincent <vincent@lsiit.u-strasbg.fr>
+
+  * Initial version.
+

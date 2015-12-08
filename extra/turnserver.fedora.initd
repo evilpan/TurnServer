@@ -1,0 +1,199 @@
+#!/bin/bash
+#
+# turnserver Starts the turnserver daemon
+#
+# chkconfig:   345 84 16
+# description: TURN server
+
+# The template for this file was taken from
+# http://fedoraproject.org/wiki/Packaging:SysVInitScript#Fedora_SysV_Initscripts
+#
+# See also a description of the exit codes at
+# http://fedoraproject.org/wiki/Packaging:SysVInitScript#Exit_Codes_for_the_Status_Action
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+exec="/usr/bin/turnserver"
+prog="turnserver"
+config="/etc/turnserver.conf"
+
+# If running multiple instances, use port number suffix on config and pid files.
+[ -e /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
+if [ -n "$PORTS" ]; then
+    files_use_portnum=yes
+else
+    PORTS=3478
+    files_use_portnum=
+fi
+
+lockfile=/var/lock/subsys/$prog
+
+# Note the LSB exit codes for the status action:
+# 0=running, 1=dead but pid file exists, 3=stopped
+rh_status() {
+    status "$@"
+}
+
+# quiet version
+rh_status_q() {
+    rh_status "$@" >/dev/null 2>&1
+}
+
+start_instance()
+{
+    local port=$1; shift
+
+    # raise open file limit
+    ulimit -n 16384
+
+    # start it up (if not running)
+    echo -n "Starting $instname: "
+    status=$(rh_status -p $pidfile $prog)
+    local rc=$?
+    [ $rc -ne 3 ] && echo "$status"
+    if [ ! -f $config ]; then
+        echo "Config file not found: $config"
+        rc=6
+    elif [ $rc -ne 0 ]; then
+        $exec -c $config -p $pidfile
+        [ $? -eq 0 ] && rc=0 || rc=1
+    fi
+    [ $rc -eq 0 ] && success || failure
+    echo
+    return $rc
+}
+
+stop_instance()
+{
+    local port=$1; shift
+
+    # stop it (if running)
+    echo -n "Stopping $instname: "
+    status=$(rh_status -p $pidfile $prog)
+    local rc=$?
+    if [ $rc -ne 0 ]; then
+        echo "$status"
+        rc=0
+    else
+        delay=3
+        killproc -p $pidfile -d $delay $prog
+        rc=$?
+    fi
+    [ $rc -eq 0 ] && success || failure
+    echo
+    return $rc
+}
+
+status_instance()
+{
+    local port=$1; shift
+
+    # use $instname not $prog here to make for a more readable status message
+    rh_status -p $pidfile $instname
+    local rc=$?
+    return $rc
+}
+
+reload_instance()
+{
+    local port=$1; shift
+
+    echo -n "Reloading $instname: "
+    status=$(rh_status -p $pidfile $prog)
+    local rc=$?
+    if [ $rc -ne 0 ]; then
+        echo "$status"
+        rc=7
+    else
+        local pid
+        pid=$(cat $pidfile)
+        kill -HUP $pid
+        [ $? -eq 0 ] && rc=0 || rc=1
+    fi
+    [ $rc -eq 0 ] && success || failure
+    echo
+    return $rc
+}
+
+foreach_instance()
+{
+    local func=$1; shift
+
+    local rc=0 instance_rc=0
+    for port in $PORTS; do
+        [ -n "$files_use_portnum" ] && portsuffix=$port || portsuffix=
+        pidfile=/var/run/$prog$portsuffix.pid
+        config=/etc/$prog$portsuffix.conf
+        instname=$prog$portsuffix
+        $func $port
+        instance_rc=$?
+        [ $instance_rc -gt $rc ] && rc=$instance_rc
+    done
+
+    return $rc
+}
+
+start()
+{
+    foreach_instance start_instance
+    retval=$?
+    [ $retval -eq 0 ] && touch $lockfile
+}
+
+stop()
+{
+    foreach_instance stop_instance
+    retval=$?
+    #[ $retval -eq 0 ] && 
+    rm -f $lockfile
+}
+
+restart()
+{
+    stop
+    start
+}
+
+### main
+
+# parse command line
+while getopts "i:" option; do
+    case "$option" in
+    i) PORTS="$OPTARG";;
+    *) exit 1;;
+    esac
+done
+shift $((OPTIND-1))
+case $# in
+1) ;;
+*) echo "Usage: $0 [-i port] action"; exit 1;;
+esac
+
+# perform action
+retval=0
+case "$1" in
+start)
+    start
+    ;;
+stop)
+    stop
+    ;;
+restart|force-reload)
+    restart
+    ;;
+reload)
+    foreach_instance reload_instance
+    ;;
+status)
+    foreach_instance status_instance
+    ;;
+condrestart|try-restart)
+    [ -f $lockfile ] || exit 0
+    restart
+    ;;
+*)
+    echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart|reload|force-reload}"
+    exit 2
+esac
+exit $?

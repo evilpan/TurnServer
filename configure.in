@@ -1,0 +1,109 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ(2.61)
+AC_INIT([turnserver],[0.7.3],[http://www.turnserver.org/])
+AC_CONFIG_SRCDIR([src/turn.h])
+AC_CONFIG_HEADER([config.h])
+
+# Unit tests with Check framework
+PKG_CHECK_MODULES([CHECK], [check >= 0.9.4],,[AC_MSG_RESULT([testing is disabled])])
+
+# Checks for programs.
+AC_PROG_CC
+AM_PROG_CC_C_O
+AC_CHECK_PROG(SED, sed, sed)
+
+# Checks for libraries.
+AC_CHECK_LIB(rt, timer_create,,[echo -e "\tPlease install librt";exit])
+AC_CHECK_LIB(ssl, SSL_new,,[echo -e "\tPlease install libssl-dev";exit])
+AC_CHECK_LIB(crypto, ERR_reason_error_string,,[echo -e "\tPlease install libssl-dev";exit])
+AC_CHECK_LIB(confuse, cfg_init,,[echo -e "\tPlease install libconfuse-dev (version >= 2.6)";exit])
+
+# Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h limits.h netdb.h netinet/in.h stddef.h stdint.h stdlib.h string.h sys/socket.h sys/time.h syslog.h unistd.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_UID_T
+AC_C_INLINE
+AC_TYPE_INT16_T
+AC_TYPE_INT32_T
+AC_TYPE_INT64_T
+AC_TYPE_INT8_T
+AC_TYPE_MODE_T
+AC_TYPE_PID_T
+AC_TYPE_SIZE_T
+AC_TYPE_SSIZE_T
+AC_HEADER_TIME
+AC_STRUCT_TM
+AC_TYPE_UINT16_T
+AC_TYPE_UINT32_T
+AC_TYPE_UINT64_T
+AC_TYPE_UINT8_T
+AC_C_VOLATILE
+
+# Doxygen
+DX_HTML_FEATURE(ON)
+DX_CHM_FEATURE(OFF)
+DX_CHI_FEATURE(OFF)
+DX_MAN_FEATURE(ON)
+DX_RTF_FEATURE(OFF)
+DX_XML_FEATURE(OFF)
+DX_PDF_FEATURE(OFF)
+DX_PS_FEATURE(OFF)
+DX_INIT_DOXYGEN(turnserver, Doxyfile)
+
+AM_INIT_AUTOMAKE(turnserver, $PACKAGE_VERSION)
+
+# Checks for library functions.
+AC_FUNC_FORK
+AC_FUNC_MALLOC
+AC_FUNC_MEMCMP
+AC_FUNC_SELECT_ARGTYPES
+AC_TYPE_SIGNAL
+AC_FUNC_STRERROR_R
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS([dup2 gettimeofday memset select pselect socket strchr strdup strerror sigaction signal])
+
+# Enable compilation in debug mode.
+AC_ARG_ENABLE(debug-build, [  --enable-debug-build    allow to compile with debug informations [default=no]], enable_debug_build=$enableval, enable_debug_build=no)
+if test "$enable_debug_build" = "yes"; then
+  AC_DEFINE([DEBUG_BUILD], [1], [Enable debug build])
+fi
+AM_CONDITIONAL(ENABLE_DEBUG_BUILD, test "$enable_debug_build" = "yes")
+
+# Enable setting FD_SETSIZE.
+AC_ARG_ENABLE(fdsetsize, [  --enable-fdsetsize      allow to preconfigure FD_SETSIZE macro (must be a number >=32) [default=no]], enable_fdsetsize=$enableval, enable_fdsetsize=0)
+if test "$enable_fdsetsize" -ge "32"; then
+  AC_DEFINE_UNQUOTED([SFD_SETSIZE], $enable_fdsetsize, [Enable user-defined FD_SETSIZE])
+else
+  enable_fdsetsize="no"
+fi
+
+# Enable setting XOR_PEER_ADDRESS_MAX.
+AC_ARG_ENABLE(xor_peer_address_max, [  --enable-xor-peer-address-max   allow to preconfigure XOR_PEER_ADDRESS_MAX macro (must be a number > 0) [default=5]], enable_xor_peer_address_max=$enableval, enable_xor_peer_address_max=5)
+if test "$enable_xor_peer_address_max" -ge "1"; then
+  AC_DEFINE_UNQUOTED([XOR_PEER_ADDRESS_MAX], $enable_xor_peer_address_max, [Enable user-defined XOR_PEER_ADDRESS_MAX])
+else
+  enable_xor_peer_address_max=5
+fi
+
+AC_CONFIG_FILES([Makefile
+                 Doxyfile
+                 src/Makefile
+                 man/Makefile
+                 doc/Makefile
+                 extra/Makefile
+                 test/Makefile])
+AC_OUTPUT
+
+AC_MSG_NOTICE([Configuration
+
+AC_PACKAGE_NAME version AC_PACKAGE_VERSION
+  Enable debug build: .............. $enable_debug_build
+  User-defined FD_SETSIZE: ......... $enable_fdsetsize
+  User-defined XOR_PEER_ADDRESS_MAX: $enable_xor_peer_address_max
+])
+

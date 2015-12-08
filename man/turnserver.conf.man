@@ -1,0 +1,248 @@
+.TH turnserver.conf 5 "May 16, 2011" "TurnServer Configuration"
+
+.SH NAME
+turnserver.conf \- TurnServer configuration file
+
+.SH SYNOPSIS
+.B /usr/local/etc/turnserver.conf
+.sp
+
+.SH DESCRIPTION
+This is the TurnServer configuration file.
+.br
+Here are the configuration options supported.
+
+.SH OPTIONS
+
+The file contains the following definitions:
+
+.TP
+.BR "listen_address " "= { IPv4 address, ... }"
+The public IPv4 address of any relayed address (if not set, no relay for IPv4).
+You can set more than one address, example:
+.BR
+listen_address = { "172.16.2.1", "173.17.2.1" }
+
+The main advantage to have multiple public IPv4 addresses is to do load sharing.
+
+.TP
+.BR "listen_addressv6 " "= { IPv6 address, ...}"
+The public IPv6 address of any relayed address (if not set, no relay for IPv6).
+You can set more than one address, example:
+.BR
+listen_addressv6 = { "2001:db8:1::1", "2001:db8:2::1" }
+
+The main advantage to have multiple public IPv6 addresses is to do load sharing.
+
+.TP
+.BR "udp_port " "= number"
+The UDP port of the server to listen for incoming connections.
+
+.TP
+.BR "tcp_port " "= number"
+The TCP port of the server to listen for incoming connections.
+
+.TP
+.BR "tls_port " "= number"
+The TLS port of the server to listen for incoming connections.
+
+.TP
+.BR "tls " "= boolean"
+Enable or not TLS over TCP connections.
+
+.TP
+.BR "dtls " "= boolean"
+Enable or not TLS over UDP connections. It is an experimental feature of
+TurnServer and it is not defined by TURN standard.
+
+.TP
+.BR "max_port " "= number"
+Maximum allocation port number.
+
+.TP
+.BR "min_port " "= number"
+Minimum allocation port number.
+
+.TP
+.BR "turn_tcp " "= boolean"
+Enable or not TURN-TCP extension. This extension is documented in RFC6062.
+
+.TP
+.BR "tcp_buffer_userspace " "= boolean"
+Enable or not userspace buffering for TURN-TCP extension. If false server will
+use OS buffering.
+
+.TP
+.BR "tcp_buffer_size " "= number"
+TURN-TCP internal buffer size. It is used to bufferize data coming from TCP peer
+when client does not have sent ConnectionBind.
+
+.TP
+.BR "daemon " "= boolean"
+Run the program as daemon.
+
+.TP
+.BR "unpriv_user " "= string"
+If the program is run as root or setuid root, the program will drop its
+privileges to the unpriv_user privileges.
+
+To use this feature, create a special user with the adduser command:
+adduser \-\-system \-\-group turnserver
+
+.TP
+.BR "realm " "= string"
+Realm value (i.e. domain.org).
+
+.TP
+.BR "nonce_key " "= string"
+Key used to hash nonce.
+
+.TP
+.BR "max_relay_per_username " "= number"
+Maximum number of allocation per username.
+
+.TP
+.BR "allocation_lifetime " "= number"
+Lifetime of an allocation in second.
+
+.TP
+.BR "bandwidth_per_allocation " "= number"
+Bandwidth limit for an allocation in KBytes/s.
+0 value means disable bandwidth quota.
+
+.TP
+.BR "restricted_bandwidth " "= number"
+Bandwidth limit for restricted userse in KBytes/s.
+0 value means disable bandwidth limitation.
+
+.TP
+.nf
+.BR "denied_address {"
+.BR " address " "= IPv4 | IPv6 address"
+.BR " mask " "= bitmask number"
+.BR " port " "= number (1 - 65535)"
+.B }
+.fi
+
+Defines an entry for the denied access list. This can appear multiple time.
+Format is defined as follow:
+.br
+.B address
+is a string representing an IPv4 or IPv6 address.
+.br
+.B mask
+is a number representing the bitmask (i.e. 24 is similar as 255.255.255.0, ...).
+.br
+.B port
+is a number representing the network port. The 0 value means all ports.
+
+It is strongly recommended to restrict addresses 127.0.0.1 and ::1 if there are
+private services running on the TURN server.
+
+.TP
+.BR "ca_file " "= string"
+The pathname of the Certification Authority certificate (required when
+tls=true).
+
+.TP
+.BR "cert_file " "= string"
+The pathname of the server certificate (required when tls=true).
+
+.TP
+.BR "private_key_file " "= string"
+The pathname of the server private key (required when tls=true).
+
+.TP
+.BR "account_method " "= [file | db | ldap ...]"
+The method to retrieve account data.
+Note that only the "file" method is implemented.
+
+.TP
+.BR "account_file " "= string"
+The pathname of the account file (required when account_method=file).
+
+.TP
+.BR "mod_tmpuser " "= boolean"
+Enable or not mod_tmpuser which consist of a socket that listen on localhost
+and external program can create or delete temporary user.
+
+.SH EXAMPLE
+
+listen_address = { "172.16.0.1" }
+
+listen_addressv6 = { "2001:db8::1" }
+
+udp_port = 3478
+
+tcp_port = 3478
+
+tls_port = 5349
+
+tls = true
+
+dtls = false
+
+max_port = 65535
+
+min_port = 49152
+
+turn_tcp = false
+
+tcp_buffer_userspace = true
+
+tcp_buffer_size = 32768
+
+daemon = false
+
+unpriv_user = turnserver
+
+realm = "domain.org"
+
+nonce_key = "hieKedq"
+
+max_relay_per_username = 10
+
+allocation_lifetime = 1800
+
+bandwidth_per_allocation = 150
+
+restricted_bandwidth = 10
+
+denied_address {
+  address = "172.1.0.3"
+  mask = 24
+  port = 0
+
+}
+
+denied_address {
+  address = "127.0.0.1"
+  mask = 8
+  port = 0
+
+}
+
+denied_address {
+  address = "::1"
+  mask = 128
+  port = 0
+
+}
+
+ca_file = "/etc/ca.crt"
+
+cert_file = "/etc/server.crt"
+
+private_key_file = "/etc/server.key"
+
+account_method = "file"
+
+account_file = "/etc/turnusers.txt
+
+.SH AUTHOR
+
+Sebastien Vincent <sebastien.vincent@turnserver.org>
+
+.SH "SEE ALSO"
+.BR turnserver (1)
+
