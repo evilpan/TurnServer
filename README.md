@@ -26,32 +26,35 @@ TurnServer is known to work on the following systems:
 TurnServer requires following libraries:
 - libconfuse development files (version >= 2.6);
 - libssl development files;
-- librt (normally included in Linux and *BSD distribution).
+- librt (normally included in Linux and *BSD distribution*).
 
 TurnServer is written in pure C according to the C99 and POSIX + XSI standards.
 Thus it should be compiled on all POSIX systems which have realtime signals
 support.
 
-Note for *BSD users, install the required libconfuse ports in /usr/ prefix,
+Note for *BSD* users, install the required libconfuse ports in /usr/ prefix,
 otherwise you have to set the PKG_CONFIG_PATH variable or make symlinks before
 running ./configure script:
-# ln -sf /usr/local/lib/libconfuse.so /usr/lib/ && \
-  ln -sf /usr/local/include/confuse.h /usr/include/
+
+    ln -sf /usr/local/lib/libconfuse.so /usr/lib/ && \
+    ln -sf /usr/local/include/confuse.h /usr/include/
 
 To build TurnServer, run following commands:
-$ autoreconf -i
-$ ./configure
-$ make
-# make install
+
+    $ autoreconf -i
+    $ ./configure
+    $ make
+    $ make install
 
 ./configure can take options:
---enable-debug-build                 : allow to compile with debug informations
-                                       default=no
---enable-fdsetsize=number            : allow to preconfigure FD_SETSIZE macro
-                                       (must be a number >=32) default=no
---enable-xor-peer-address-max=number : allow to preconfigure
-                                       XOR_PEER_ADDRESS_MAX macro (must be a
-                                       number > 0) default=5
+
+    --enable-debug-build                 : allow to compile with debug informations
+                                           default=no
+    --enable-fdsetsize=number            : allow to preconfigure FD_SETSIZE macro
+                                           (must be a number >=32) default=no
+    --enable-xor-peer-address-max=number : allow to preconfigure
+                                           XOR_PEER_ADDRESS_MAX macro (must be a
+                                           number > 0) default=5
 
 Copy the template configuration file (extra/turnserver.conf.template) and
 template accounts database file (extra/turnusers.txt) to a directory of your
@@ -61,12 +64,14 @@ configuration file (attribute account_file). See next sections to know how to
 setup configuration and accounts files.
 
 To generate the API documentation:
-$ make doxygen-run
+
+    $ make doxygen-run
 
 The HTML generated documentation is located in doc/html/ directory of TurnServer sources.
 
 Launch the server:
-$ turnserver -c /path/to/config/file
+
+    $ turnserver -c /path/to/config/file
 
 2) Configuration file
 ---------------------
@@ -93,7 +98,8 @@ Here are important parameters,
 
 Other parameters such as allocations number quota or experimental features are
 documented in manpages:
-$ man turnserver.conf
+
+    $ man turnserver.conf
 
 3) Accounts database file
 --------------------------
@@ -102,7 +108,8 @@ TurnServer uses (for the moment) a basic text file which contains accounts
 information.
 
 The format of each line is:
-login:password:realm:state
+
+    login:password:realm:state
 
 The state can be "authorized", "refused" or "restricted". The "restricted" state
 means the account has bandwidth restrictions.
@@ -118,15 +125,17 @@ privileges.
 
 One possibility is to create a special user (which have less privileges). To
 create such a user named turnserver:
-# adduser --system --group turnserver
+
+    adduser --system --group turnserver
 
 Then you have to tell configuration file to choose this user:
-unpriv_user = turnserver
+
+    unpriv_user = turnserver
 
 If TurnServer is set-uid root and unpriv_user is not set, TurnServer will drop
 privileges to the user who launched the binary.
 
-Note: if turnserver is launched as root and unpriv_user not set, the program
+**Note**: if turnserver is launched as root and unpriv_user not set, the program
 will not loose its root privileges.
 
 5) How-to test simply turnserver
