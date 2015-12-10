@@ -1,2 +1,6 @@
 *.o
 *.swp
+*.man
+src/test_echo_server
+src/test_turn_client
+src/turnservr
