@@ -1,5 +1,6 @@
 TurnServer
 ==========
+
 A fork from [http://turnserver.sourceforge.net](http://turnserver.sourceforge.net/index.php?n=Main.HomePage)
 
 TurnServer is an open-source implementation of Traversal Using Relays around NAT
@@ -20,10 +21,10 @@ TurnServer is known to work on the following systems:
 - GNU/Linux 2.6;
 - FreeBSD 7.x, 8.x.
 
-1) Build / install
-------------------
+# Build / install
 
 TurnServer requires following libraries:
+
 - libconfuse development files (version >= 2.6);
 - libssl development files;
 - librt (normally included in Linux and *BSD distribution*).
@@ -33,7 +34,7 @@ Thus it should be compiled on all POSIX systems which have realtime signals
 support.
 
 Note for *BSD* users, install the required libconfuse ports in /usr/ prefix,
-otherwise you have to set the PKG_CONFIG_PATH variable or make symlinks before
+otherwise you have to set the `PKG_CONFIG_PATH` variable or make symlinks before
 running ./configure script:
 
     ln -sf /usr/local/lib/libconfuse.so /usr/lib/ && \
@@ -60,7 +61,7 @@ Copy the template configuration file (extra/turnserver.conf.template) and
 template accounts database file (extra/turnusers.txt) to a directory of your
 choice (i.e. /etc/ or /usr/local/etc/).
 Do not forget, the accounts database file pathname has to be populated in
-configuration file (attribute account_file). See next sections to know how to
+configuration file (`attribute account_file`). See next sections to know how to
 setup configuration and accounts files.
 
 To generate the API documentation:
@@ -73,13 +74,13 @@ Launch the server:
 
     $ turnserver -c /path/to/config/file
 
-2) Configuration file
----------------------
+# Configuration file
 
 In extra/ directory you will find a configuration template file
 (turnserver.conf.template). Change settings according to your environment.
 
 Here are important parameters,
+
 - listen_address        : public IPv4 address;
 - listen_addressv6      : public IPv6 address;
 - realm                 : realm (i.e. domain.org) of the server;
@@ -101,8 +102,7 @@ documented in manpages:
 
     $ man turnserver.conf
 
-3) Accounts database file
---------------------------
+# Accounts database file
 
 TurnServer uses (for the moment) a basic text file which contains accounts
 information.
@@ -117,8 +117,7 @@ means the account has bandwidth restrictions.
 Note: realm have to match realm parameter defined in TurnServer configuration
 file. The ":" character is also forbidden in login, password or realm fields.
 
-4) Security
-------------
+# Security
 
 If TurnServer is launched as root or set-uid root, it is possible to drop
 privileges.
@@ -138,14 +137,14 @@ privileges to the user who launched the binary.
 **Note**: if turnserver is launched as root and unpriv_user not set, the program
 will not loose its root privileges.
 
-5) How-to test simply turnserver
---------------------------------
+# How-to test simply turnserver
 
 TurnServer is shipped with two test tools: test_turn_client and 
 test_echo_server. The first one is a minimal TURN client and test_echo_server
 is a simple UDP echo server.
 
 To test TurnServer simply:
+
 - configure turnserver.conf;
 - configure turnusers.txt ;
 - launch "turnserver -c /path/to/turnserver.conf";
